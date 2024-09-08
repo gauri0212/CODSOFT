@@ -1,0 +1,130 @@
+#include <stdio.h>
+
+#define SIZE 3
+
+// Function prototypes
+void initializeBoard(char board[SIZE][SIZE]);
+void printBoard(const char board[SIZE][SIZE]);
+int isBoardFull(const char board[SIZE][SIZE]);
+int checkWin(const char board[SIZE][SIZE], char player);
+void makeMove(char board[SIZE][SIZE], int row, int col, char player);
+void getMove(int *row, int *col);
+void playGame();
+
+int main() {
+    char playAgain;
+    do {
+        playGame();
+        printf("Do you want to play again? (y/n): ");
+        scanf(" %c", &playAgain);
+    } while (playAgain == 'y');
+    
+    return 0;
+}
+
+void initializeBoard(char board[SIZE][SIZE]) {
+    for (int i = 0; i < SIZE; ++i) {
+        for (int j = 0; j < SIZE; ++j) {
+            board[i][j] = ' ';
+        }
+    }
+}
+
+void printBoard(const char board[SIZE][SIZE]) {
+    printf("---------\n");
+    for (int i = 0; i < SIZE; ++i) {
+        for (int j = 0; j < SIZE; ++j) {
+            printf("| %c ", board[i][j]);
+        }
+        printf("|\n---------\n");
+    }
+}
+
+int isBoardFull(const char board[SIZE][SIZE]) {
+    for (int i = 0; i < SIZE; ++i) {
+        for (int j = 0; j < SIZE; ++j) {
+            if (board[i][j] == ' ') {
+                return 0;  // Board is not full
+            }
+        }
+    }
+    return 1;  // Board is full
+}
+
+int checkWin(const char board[SIZE][SIZE], char player) {
+    // Check rows
+    for (int i = 0; i < SIZE; ++i) {
+        if (board[i][0] == player && board[i][1] == player && board[i][2] == player) {
+            return 1;
+        }
+    }
+    // Check columns
+    for (int j = 0; j < SIZE; ++j) {
+        if (board[0][j] == player && board[1][j] == player && board[2][j] == player) {
+            return 1;
+        }
+    }
+    // Check diagonals
+    if (board[0][0] == player && board[1][1] == player && board[2][2] == player) {
+        return 1;
+    }
+    if (board[2][0] == player && board[1][1] == player && board[0][2] == player) {
+        return 1;
+    }
+    return 0;
+}
+
+void makeMove(char board[SIZE][SIZE], int row, int col, char player) {
+    if (board[row][col] == ' ') {
+        board[row][col] = player;
+    } else {
+        printf("Invalid move. Cell already occupied.\n");
+    }
+}
+
+void getMove(int *row, int *col) {
+    int move;
+    printf("Enter your move (1-9): ");
+    scanf("%d", &move);
+    if (move < 1 || move > 9) {
+        printf("Invalid move. Please enter a number between 1 and 9.\n");
+        getMove(row, col);  // Recursive call for invalid input
+    } else {
+        *row = (move - 1) / SIZE;
+        *col = (move - 1) % SIZE;
+    }
+}
+
+void playGame() {
+    char board[SIZE][SIZE];
+    char currentPlayer = 'X';
+    int row, col;
+    int winner = 0;
+
+    initializeBoard(board);
+
+    while (1) {
+        printBoard(board);
+        printf("Player %c's turn.\n", currentPlayer);
+        getMove(&row, &col);
+
+        if (board[row][col] == ' ') {
+            makeMove(board, row, col, currentPlayer);
+
+            if (checkWin(board, currentPlayer)) {
+                printBoard(board);
+                printf("Player %c wins!\n", currentPlayer);
+                winner = 1;
+                break;
+            } else if (isBoardFull(board)) {
+                printBoard(board);
+                printf("The game is a draw.\n");
+                break;
+            }
+
+            currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
+        } else {
+            printf("Cell is already occupied. Try again.\n");
+        }
+    }
+}
