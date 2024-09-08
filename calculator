@@ -1,0 +1,17 @@
+//calulator program
+#include <iostream>
+using namespace std;
+int main()
+{
+	int a,b,add,sub,mul,div;
+	cout<<"enter the value of a and b"<<endl;
+	cin>>a>>b;
+	add=a+b;//addition operator
+	cout<<"addition of the two numbers = "<<add<<endl;
+	sub=a-b;//subtraction operator
+	cout<<"subtraction of the two numbers = "<<sub<<endl;
+	mul=a*b;//multipliction operator
+	cout<<"multiplication of the two numbers = "<<mul<<endl;
+	div=a/b;//division operator
+	cout<<"division of the two numbers = "<<div<<endl;
+}
